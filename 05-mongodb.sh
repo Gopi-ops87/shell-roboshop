@@ -8,40 +8,37 @@ Y="\e[33m"
 N="\e[0m"
 
 LOGS_FOLDER="/var/log/shell-roboshop"
-SCRIPT_NAME=$( basename "$0" .sh)
+SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 
 mkdir -p $LOGS_FOLDER
 
 
-echo "script started executed at: $(date)"
+echo "script started executed at: $(date)" | tee -a $LOG_FILE
 
 if [ $USER_ID -ne 0 ]; then
     echo "ERROR:: please use root access"
-    echo "ERROR:: please use root access" &>>"$LOG_FILE"
-    exit 1
+    exit 1  # failure is other than 0
 fi
 
 
-VALIDATE() {
+VALIDATE() {   #function to receive inputs through args just like shell script args
             if [ $1 -ne 0 ]; then
-                echo -e "ERROR:: $2 ....$R installation is failed $N"
-                echo -e "ERROR:: $2 ....$R installation is failed $N" &>>"$LOG_FILE"
+                echo -e "$2 ....$R failure $N" | tee -a $LOG_FILE
                 exit 1
             else
-                echo -e "$2.. $G  success $N"
-                echo -e "$2.. $G  success $N" &>>"$LOG_FILE"
+                echo -e "$2.. $G  success $N" | tee -a $LOG_FILE
             fi
 }
 
 cp mongo.repo /etc/yum.repos.d/mongo.repo
 VALIDATE $? "Adding Mongo repo"
 
-dnf install mongodb-org -y  &>> "$LOG_FILE"
+dnf install mongodb-org -y  &>>$LOG_FILE
 VALIDATE $? "Installing MongoDB"
 
-systemctl enable mongod &>> "$LOG_FILE"
+systemctl enable mongod &>>$LOG_FILE
 VALIDATE $? "Enable MongoDB"
 
-systemctl start mongod &>> "$LOG_FILE"
+systemctl start mongod &>>$LOG_FILE
 VALIDATE $? "Started MongoDB"
