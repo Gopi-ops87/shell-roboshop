@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+trap 'echo "There is an error in $LINENO, Command is: $BASH_COMMAND"' ERR
+
 USER_ID=$(id -u)
 
 R="\e[31m"
@@ -26,24 +28,14 @@ if [ $USER_ID -ne 0 ]; then
 fi
 
 
-VALIDATE() {   #function to receive inputs through args just like shell script args
-            if [ $1 -ne 0 ]; then
-                echo -e "$2 ....$R failure $N" | tee -a $LOG_FILE
-                exit 1
-            else
-                echo -e "$2.. $G  success $N" | tee -a $LOG_FILE
-            fi
-}
+dnf module disable nodes -y &>>$LOG_FILE
 
-dnf module disable nodejs -y &>>$LOG_FILE
-VALIDATE $? "Disabling mongodb"
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "enabling mongodb"
+
 
 
 dnf install nodejs -y &>>$LOG_FILE
-VALIDATE $? "installing mongodb"
 
 id roboshop &>> $LOG_FILE
 if [ $? -ne 0 ]; then
@@ -54,52 +46,50 @@ else
 fi
 
 mkdir -p /app 
-VALIDATE $? "Creating app directory"
+
 
 curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip &>>$LOG_FILE
-VALIDATE $? "Downloading catalogue application"
+
 
 cd /app 
-VALIDATE $? "Changing app directory"
+
 
 rm -rf /app/*
-VALIDATE $? "Removing existing code"
+
 
 unzip /tmp/catalogue.zip &>>$LOG_FILE
-VALIDATE $? "unzip catalogue"
+
 
 
 npm install  &>>$LOG_FILE
-VALIDATE $? "install dependies"
+
 
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
-VALIDATE $? "copy systemstl service"
+
 
 systemctl daemon-reload
 systemctl enable catalogue 
-VALIDATE $? "enable catalogue"
+
 
 systemctl start catalogue &>>$LOG_FILE
-VALIDATE $? "start catalogue"
+
 
 
 
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-VALIDATE $? "copy mongo repo"
 
 dnf install mongodb-mongosh -y &>>$LOG_FILE
-VALIDATE $? "install mongodb client"
+
 
 INDEX=$(mongosh mongodb.dev28p.online --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
 if [ $INDEX -le 0 ]; then
     mongosh --host $MONGODB_IP </app/db/master-data.js &>>$LOG_FILE
-    VALIDATE $? "Load catalogue products"
 else
     echo -e "Catalogue products already loaded ... $Y SKIPPING $N"
 fi
 
 mongosh --host $MONGODB_IP </app/db/master-data.js &>>$LOG_FILE
-VALIDATE $? "load catalogue products"
+
 
 systemctl restart catalogue
-VALIDATE $? "catalogue service restarted"
+
