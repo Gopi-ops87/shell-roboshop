@@ -9,9 +9,9 @@ N="\e[0m"
 
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
-LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
-MONGODB_IP="mongodb.dev28p.onine"
-SCRIPT_DIR=$(PWD)
+SCRIPT_DIR=$PWD
+MONGODB_IP=mongodb.dev28p.onine
+LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/06-catalogue.log
 
 mkdir -p $LOGS_FOLDER
 
@@ -43,7 +43,7 @@ VALIDATE $? "enabling mongodb"
 dnf install nodejs -y &>>$LOG_FILE
 VALIDATE $? "installing mongodb"
 
-id roboshop
+id roboshop &>> $LOG_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
     VALIDATE $? "creating system user"
@@ -60,7 +60,10 @@ VALIDATE $? "Downloading catalogue application"
 cd /app 
 VALIDATE $? "Changing app directory"
 
-unzip -o /tmp/catalogue.zip &>>$LOG_FILE
+rm -rf /app/*
+VALIDATE $? "Removing existing code"
+
+unzip /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "unzip catalogue"
 
 
