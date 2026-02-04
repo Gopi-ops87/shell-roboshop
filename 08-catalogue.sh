@@ -28,7 +28,7 @@ if [ $USER_ID -ne 0 ]; then
 fi
 
 
-dnf module disable nodes -y &>>$LOG_FILE
+dnf module disable nodejs -y &>>$LOG_FILE
 
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
