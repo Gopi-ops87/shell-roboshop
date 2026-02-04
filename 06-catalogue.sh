@@ -11,7 +11,7 @@ LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 MONGODB_IP="mongodb.dev28p.onine"
-SCRIPT_DIR=$PWD
+SCRIPT_DIR=$(PWD)
 
 mkdir -p $LOGS_FOLDER
 
@@ -58,9 +58,9 @@ curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue
 VALIDATE $? "Downloading catalogue application"
 
 cd /app 
-VALIDATE $? "Changin app directory"
+VALIDATE $? "Changing app directory"
 
-unzip /tmp/catalogue.zip &>>$LOG_FILE
+unzip -o /tmp/catalogue.zip &>>$LOG_FILE
 VALIDATE $? "unzip catalogue"
 
 
