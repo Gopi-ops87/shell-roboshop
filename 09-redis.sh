@@ -41,7 +41,7 @@ VALIDATE $? "Installing redis"
 sed -i \
  -e 's/^bind 127.0.0.1/bind 0.0.0.0/' \
   -e 's/^protected-mode yes/protected-mode no/' \
-  /etc/redis/redis.conf
+  /etc/redis/redis.conf &>>$LOG_FILE
 VALIDATE $? "allowing remote connections"
 systemctl enable redis  &>>$LOG_FILE
 VALIDATE $? "enabling redis"
