@@ -9,8 +9,6 @@ N="\e[0m"
 
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
-SCRIPT_DIR=$PWD
-MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/06-catalogue.log
 
 mkdir -p $LOGS_FOLDER
@@ -40,7 +38,10 @@ dnf module enable redis:7 -y  &>>$LOG_FILE
 VALIDATE $? "enabling redis 7"
 dnf install redis -y   &>>$LOG_FILE
 VALIDATE $? "Installing redis"
-sed 's/127.0.0.1/0.0.0.0/g' 'protect-mode/c/protect-mode no' /etc/redis/redis.conf
+sed -i \
+ -e 's/^bind 127.0.0.1/bind 0.0.0.0/' \
+  -e 's/^protected-mode yes/protected-mode no/' \
+  /etc/redis/redis.conf
 VALIDATE $? "allowing remote connections"
 systemctl enable redis  &>>$LOG_FILE
 VALIDATE $? "enabling redis"
