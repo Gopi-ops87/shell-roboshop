@@ -15,7 +15,7 @@ LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 
 mkdir -p &>>$LOG_FILE
 
-START_TIME=$(date +%S)
+START_TIME=$(date +%s)
 echo "script started executed at: $(date)" | tee -a &>>$LOG_FILE
 
 if [ $USER_ID -ne 0 ]; then
@@ -54,7 +54,7 @@ VALIDATE $? "Copying nginx.conf"
 systemctl restart nginx &>>$LOG_FILE
 VALIDATE $? "Restarting ngnx"
 
-END_TIME=$(date +%S)
+END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 
 echo -e "Total execution time is: $Y $TOTAL_TIME seconds $N"
