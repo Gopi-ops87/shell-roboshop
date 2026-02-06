@@ -62,3 +62,4 @@ systemctl daemon-reload
 systemctl enable payment  &>>$LOG_FILE
 
 systemctl restart payment
+VALIDATE $? "restarting payment"
