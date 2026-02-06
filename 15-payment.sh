@@ -14,10 +14,10 @@ MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 MYSQL_IP="mysql.dev28p.online"
 
-mkdir -p &>>$LOG_FILE
+mkdir -p $LOG_FILE
 
 START_TIME=$(date +%S)
-echo "script started executed at: $(date)" | tee -a &>>$LOG_FILE
+echo "script started executed at: $(date)" | tee -a $LOG_FILE
 
 if [ $USER_ID -ne 0 ]; then
     echo "ERROR:: please use root access"
@@ -25,12 +25,12 @@ if [ $USER_ID -ne 0 ]; then
 fi
 
 
-VALIDATE() {   #function to receive inputs through args just like shell script args
+VALIDATE(){   #function to receive inputs through args just like shell script args
             if [ $1 -ne 0 ]; then
-                echo -e "$2 ....$R failure $N" | tee -a &>>$LOG_FILE
+                echo -e "$2 ....$R failure $N" | tee -a $LOG_FILE
                 exit 1
             else
-                echo -e "$2.. $G  success $N" | tee -a &>>$LOG_FILE
+                echo -e "$2.. $G  success $N" | tee -a $LOG_FILE
             fi
 }
 
@@ -55,6 +55,7 @@ cd /app
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Removing existing code"
 unzip /tmp/payment.zip &>>$LOG_FILE
+VALIDATE $? "unzip code"
 
 pip3 install -r requirements.txt &>>$LOG_FILE
 VALIDATE $? "install dependies"
