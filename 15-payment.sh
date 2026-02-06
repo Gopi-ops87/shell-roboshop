@@ -10,7 +10,9 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
+MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
+MYSQL_IP="mysql.dev28p.online"
 
 mkdir -p $LOGS_FOLDER
 
@@ -32,8 +34,8 @@ VALIDATE() {   #function to receive inputs through args just like shell script a
             fi
 }
 
-dnf install python3 gcc python3-devel -y
-VALIDATE $? "Disabling nodejs"
+dnf install python3 gcc python3-devel -y $LOG_FILE
+VALIDATE $? "Disabling python3"
 
 
 id roboshop &>> $LOG_FILE
@@ -44,19 +46,20 @@ else
     echo -e "User already exist ... $Y Skipping $N"
 fi
 
-mkdir -p /app 
+mkdir -p /app &>>$LOG_FILE
 VALIDATE $? "Creating app directory"
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip 
+curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE
+VALIDATE $? "Donloading payment application"
 cd /app 
-rm -rf /app/*
+rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Removing existing code"
-unzip /tmp/payment.zip
+unzip /tmp/payment.zip &>>$LOG_FILE
 
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt &>>$LOG_FILE
 VALIDATE $? "install dependies"
 
-cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service
+cp $SCRIPT_DIR/payment.service /etc/systemd/system/payment.service &>>$LOG_FILE
 VALIDATE $? "copy systemstl service"
 
 systemctl daemon-reload
