@@ -14,7 +14,7 @@ MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 MYSQL_IP="mysql.dev28p.online"
 
-mkdir -p $LOG_FILE
+mkdir -p $LOG_FOLDER
 
 START_TIME=$(date +%S)
 echo "script started executed at: $(date)" | tee -a $LOG_FILE
