@@ -16,7 +16,7 @@ MYSQL_IP="mysql.dev28p.online"
 
 mkdir -p $LOGS_FOLDER
 
-START_TIME=$(date +%S)
+START_TIME=$(date +%s)
 echo "script started executed at: $(date)" | tee -a $LOG_FILE
 
 if [ $USER_ID -ne 0 ]; then
@@ -54,7 +54,7 @@ VALIDATE $? "Donloading payment app"
 cd /app 
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Removing existing code"
-unzip /tmp/payment.zip &>>$LOG_FILE
+unzip -o /tmp/payment.zip &>>$LOG_FILE
 VALIDATE $? "unzip code"
 
 pip3 install -r requirements.txt &>>$LOG_FILE
@@ -70,7 +70,7 @@ VALIDATE $? "enable payment"
 systemctl start payment &>>$LOG_FILE
 VALIDATE $? "start payment"
 
-END_TIME=$(date +%S)
+END_TIME=$(date +%s)
 TOTAL_TIME=$((END_TIME - START_TIME))
 
 echo -e "Total execution time is: $Y $TOTAL_TIME seconds $N"
