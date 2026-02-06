@@ -14,10 +14,10 @@ MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 MYSQL_IP="mysql.dev28p.online"
 
-mkdir -p $LOGS_FOLDER
+mkdir -p &>>$LOG_FILE
 
 START_TIME=$(date +%S)
-echo "script started executed at: $(date)" | tee -a $LOG_FILE
+echo "script started executed at: $(date)" | tee -a &>>$LOG_FILE
 
 if [ $USER_ID -ne 0 ]; then
     echo "ERROR:: please use root access"
@@ -27,18 +27,18 @@ fi
 
 VALIDATE() {   #function to receive inputs through args just like shell script args
             if [ $1 -ne 0 ]; then
-                echo -e "$2 ....$R failure $N" | tee -a $LOG_FILE
+                echo -e "$2 ....$R failure $N" | tee -a &>>$LOG_FILE
                 exit 1
             else
-                echo -e "$2.. $G  success $N" | tee -a $LOG_FILE
+                echo -e "$2.. $G  success $N" | tee -a &>>$LOG_FILE
             fi
 }
 
-dnf install python3 gcc python3-devel -y $LOG_FILE
-VALIDATE $? "Disabling python3"
+dnf install python3 gcc python3-devel -y &>>$LOG_FILE
+VALIDATE $? "installing pyton3"
 
 
-id roboshop &>> $LOG_FILE
+id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
     VALIDATE $? "creating system user"
