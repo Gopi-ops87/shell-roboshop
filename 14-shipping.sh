@@ -76,9 +76,9 @@ VALIDATE $? "Installing mysql client"
 mysql -h $MYSQL_IP -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]; then 
 
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
-mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
+mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
 
 else
 echo -e "Shipping data is already loaded ... $Y skipping $N"
