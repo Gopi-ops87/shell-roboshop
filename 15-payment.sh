@@ -35,7 +35,7 @@ VALIDATE() {   #function to receive inputs through args just like shell script a
 }
 
 dnf install python3 gcc python3-devel -y &>>$LOG_FILE
-VALIDATE $? "installing pyton3"
+VALIDATE $? "installing pyton"
 
 
 id roboshop &>>$LOG_FILE
@@ -49,8 +49,8 @@ fi
 mkdir -p /app &>>$LOG_FILE
 VALIDATE $? "Creating app directory"
 
-curl -L -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE
-VALIDATE $? "Donloading payment application"
+curl -o /tmp/payment.zip https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip &>>$LOG_FILE
+VALIDATE $? "Donloading payment app"
 cd /app 
 rm -rf /app/* &>>$LOG_FILE
 VALIDATE $? "Removing existing code"
