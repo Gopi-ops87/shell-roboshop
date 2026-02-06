@@ -10,9 +10,9 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
-MONGODB_IP="mongodb.dev28p.online"
+MONGODB_HOST="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
-MYSQL_IP="mysql.dev28p.online"
+MYSQL_HOST="mysql.dev28p.online"
 
 mkdir -p $LOGS_FOLDER
 
@@ -73,12 +73,12 @@ VALIDATE $? "starting shipping service"
 dnf install mysql -y  &>>$LOG_FILE
 VALIDATE $? "Installing mysql client"
 
-mysql -h $MYSQL_IP -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0 ]; then 
 
-mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
-mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
-mysql -h mysql.dev28p.online -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
 
 else
 echo -e "Shipping data is already loaded ... $Y skipping $N"
