@@ -74,7 +74,7 @@ dnf install mysql -y  &>>$LOG_FILE
 VALIDATE $? "Installing mysql client"
 
 mysql -h $MYSQL_IP -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
-if [$? -ne 0 ]; then 
+if [ $? -ne 0 ]; then 
 
 mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
 mysql -h <MYSQL-SERVER-IPADDRESS> -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
