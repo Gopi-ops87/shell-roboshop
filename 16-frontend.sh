@@ -13,9 +13,9 @@ SCRIPT_DIR=$PWD
 MONGODB_HOST="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 
-
+mkdir -p "$LOGS_FOLDER"
 START_TIME=$(date +%s)
-echo "script started executed at: $(date)" | tee -a &>>$LOG_FILE
+echo "script started executed at: $(date)" 
 
 if [ $USER_ID -ne 0 ]; then
     echo "ERROR:: please use root access"
