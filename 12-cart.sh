@@ -10,6 +10,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
+MONGODB_IP="mongodb.dev28p.online"
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"  # /var/log/shell-roboshop/12-cart.log
 
 mkdir -p $LOGS_FOLDER
@@ -36,11 +37,11 @@ dnf module disable nodejs -y &>>$LOG_FILE
 VALIDATE $? "Disabling nodejs"
 
 dnf module enable nodejs:20 -y &>>$LOG_FILE
-VALIDATE $? "enabling nodejs
+VALIDATE $? "enabling nodejs"
 
 
 dnf install nodejs -y &>>$LOG_FILE
-VALIDATE $? "installing nodejs
+VALIDATE $? "installing nodejs"
 
 id roboshop &>> $LOG_FILE
 if [ $? -ne 0 ]; then
